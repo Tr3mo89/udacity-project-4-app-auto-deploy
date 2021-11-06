@@ -132,20 +132,38 @@ jobs:
               --tags project=udapeople \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
-      - run: ls -la
-      - run: pwd
       - run:
           name: Add back-end ip to ansible inventory
           command: |
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text >> .circleci/ansible/inventory.txt
+      - run: cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
       - destroy-environment  
   
+  configure-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "58:08:c1:dc:0c:42:47:47:88:cc:d8:90:a3:95:14:94"
+      - attach_workspace:
+          at: /workspace
+      - run:
+          name: Install dependencies
+          command: yum install -y tar gzip ansible
+      - run:
+          name: Configure server
+          command: |
+            echo "configure server"
+      # Here's where you will add some code to rollback on failure 
+
 
 workflows:
   default:
@@ -162,4 +180,6 @@ workflows:
           requires: [build-backend]   
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
   
