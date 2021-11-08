@@ -147,7 +147,7 @@ jobs:
   
   configure-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: fedora:latest
     steps:
       - checkout
       - add_ssh_keys:
@@ -155,10 +155,10 @@ jobs:
             - "58:08:c1:dc:0c:42:47:47:88:cc:d8:90:a3:95:14:94"
       - run:
           name: Install dependencies
-          command: yum install -y tar gzip ansible
+          command: yum install -y tar gzip
       - run:
           name: Install ansible
-          command: pip3 install --user ansible
+          command: yum install -y ansible
       - attach_workspace:
           at: /workspace
       - run:
