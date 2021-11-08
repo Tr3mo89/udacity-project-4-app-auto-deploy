@@ -147,7 +147,7 @@ jobs:
   
   configure-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: tr3mo89/fedora-ansible:latest
     steps:
       - checkout
       - add_ssh_keys:
