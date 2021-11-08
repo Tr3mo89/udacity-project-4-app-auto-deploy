@@ -63,8 +63,8 @@ jobs:
           name: front-end build
           command: |
              cd frontend
-             npm install
-             npm run test
+            # npm install  !!!!!!!!!!!!!!!!!!!! just for faster deployments
+            # npm run test
                 
   test-backend:
     docker:
@@ -147,7 +147,7 @@ jobs:
   
   configure-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: ansible/ansible
     steps:
       - checkout
       - add_ssh_keys:
@@ -156,9 +156,9 @@ jobs:
       - run:
           name: Install dependencies
           command: yum install -y tar gzip ansible
-      - run:
-          name: Install ansible
-          command: pip install --user ansible
+      #- run:
+      #    name: Install ansible
+      #    command: pip install --user ansible
       - attach_workspace:
           at: /workspace
       - run:
