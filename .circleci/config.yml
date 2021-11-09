@@ -147,7 +147,8 @@ jobs:
   
   configure-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      #- image: amazon/aws-cli
+      - image: tr3mo89/fedora-aws-ansible:latest
     steps:
       - checkout
       - add_ssh_keys:
@@ -159,8 +160,8 @@ jobs:
       - run:
           name: Install ansible
           command: |
-            sudo yum update -y
-            sudo yum install -y ansible
+            yum update -y
+            yum install -y ansible
       - attach_workspace:
           at: ~/
       - run: cat .circleci/ansible/inventory.txt
