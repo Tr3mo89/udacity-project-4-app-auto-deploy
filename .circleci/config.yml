@@ -13,7 +13,7 @@ commands:
           when: on_fail
           command: |
             aws cloudformation delete-stack \
-              --stack-name=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}}
+              --stack-name=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: Destroy frontend
           when: on_fail
@@ -117,9 +117,6 @@ jobs:
       - image: tr3mo89/udacity-project4:latest
     steps:
       - checkout
-      - run: 
-          name: install tar and gzip
-          command: yum install -y tar gzip
       - run:
           name: Deploy backend
           command: |
@@ -157,13 +154,6 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["58:08:c1:dc:0c:42:47:47:88:cc:d8:90:a3:95:14:94"]
-      #- run:
-      #    name: Install dependencies
-      #    command: yum install -y tar gzip
-      #- run:
-      #    name: Install ansible
-      #    command: |
-      #      yum install -y ansible
       - attach_workspace:
           at: ~/
       - run: cat .circleci/ansible/inventory.txt
@@ -187,7 +177,6 @@ jobs:
             cd backend
             npm install
             npm run migrations > migrations_dump.txt
-      - run: pwd
       - run: cat backend/migrations_dump.txt
       - run:
           name: Send migration results to memstash
@@ -197,6 +186,36 @@ jobs:
               curl -H "Content-Type: text/plain" -H "token: 9193554c-fc6e-4701-be40-85335fa888fb" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
             fi
       - destroy-environment   
+
+  deploy-frontend:
+    docker:
+      - image: tr3mo89/udacity-project4:latest
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [frontend-build]
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Get backend url
+          command: |
+            export BACKEND_IP=$(aws ec2 describe-instances \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --filters Name=tag:project,Values='udapeople' \
+              --output text >> .circleci/ansible/inventory.txt)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL = ${API_URL}"
+            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            cat frontend/.env
+      - run:
+          name: Deploy frontend objects
+          command: |
+            cd frontend
+            npm install
+            npm run build
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - destroy-environment  
 
 workflows:
   default:
@@ -215,6 +234,8 @@ workflows:
           requires: [test-frontend, test-backend, analyze-frontend, analyze-backend]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
-      - run-migrations #:
-          #requires: [configure-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
   

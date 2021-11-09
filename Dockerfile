@@ -1,17 +1,18 @@
-FROM fedora:latest
+FROM ubuntu:latest
 
-# Copy files of the udacity-cloud-devops-engineer project
-#COPY . /project
+RUN apt update
 
-#WORKDIR /project
+# Install dependencies
+RUN apt install -y unzip curl tar python3
 
-#CMD ["ls", "-la"]
+# to install software without waiting for interaktion => configure tzdata
+ARG DEBIAN_FRONTEND=noninteractive
 
-RUN yum install -y tar gzip unzip
+RUN apt install -y nodejs npm
 
-RUN yum install -y ansible
+RUN apt install -y ansible
 
 # Install aws-cli
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
-    sudo ./aws/install
+    ./aws/install
