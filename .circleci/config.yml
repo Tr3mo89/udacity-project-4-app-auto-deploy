@@ -80,7 +80,7 @@ jobs:
             # npm install  !!!!!!!!!!!!!!!!!!!! just for faster deployments
             # npm run test
             
-  scan-frontend:
+  analyze-frontend:
     docker:
       - image: circleci/node:13.8.0
     steps:
@@ -93,7 +93,7 @@ jobs:
              cd frontend
              npm audit fix --audit-level=critical --force
 
-  scan-backend:
+  analyze-backend:
     docker:
       - image: circleci/node:13.8.0
     steps:
@@ -117,7 +117,7 @@ jobs:
           name: install tar and gzip
           command: yum install -y tar gzip
       - run:
-          name: Ensure back-end infrastructure exists
+          name: Deploy backend
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
@@ -125,7 +125,7 @@ jobs:
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
       - run:
-          name: Ensure front-end infrastructure exist
+          name: deploy frontend
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
@@ -154,8 +154,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints:
-            - "58:08:c1:dc:0c:42:47:47:88:cc:d8:90:a3:95:14:94"
+          fingerprints: ["58:08:c1:dc:0c:42:47:47:88:cc:d8:90:a3:95:14:94"]
       #- run:
       #    name: Install dependencies
       #    command: yum install -y tar gzip
