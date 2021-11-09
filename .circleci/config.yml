@@ -172,6 +172,25 @@ jobs:
               ansible-playbook -i inventory.txt configure-server.yml -vvv
       - destroy-environment 
 
+  run-migrations:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: Run migrations
+          command: |
+            cd backend
+            npm install
+            npm run migrations > migrations_dump.txt
+      - run:
+          name: Send migration results to memstash
+          command: |
+            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+            then
+              curl -H "Content-Type: text/plain" -H "token: 9193554c-fc6e-4701-be40-85335fa888fb" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
+            fi
+      - destroy-environment   
 
 workflows:
   default:
@@ -190,4 +209,6 @@ workflows:
           requires: [test-frontend, test-backend, analyze-frontend, analyze-backend]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
+      - run-migrations #:
+          #requires: [configure-infrastructure]
   
