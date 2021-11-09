@@ -17,7 +17,7 @@
     - TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
     - TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
     - TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
-    - TYPEORM_PASSWORD: "{{ lokup('env', 'TYPEORM_PASSWORD') }}"
+    - TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
 
   pre_tasks:
     - name: "wait 600 seconds for target connection to become reachable/usable."
