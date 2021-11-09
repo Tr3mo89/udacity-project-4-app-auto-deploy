@@ -143,11 +143,13 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
+      - run: ls -la
+      - run: pwd
       - destroy-environment  
   
   configure-infrastructure:
     docker:
-      - image: tr3mo89/fedora-ansible:latest
+      - image: tr3mo89/fedora-aws-ansible:latest
     steps:
       - checkout
       - add_ssh_keys:
@@ -160,7 +162,9 @@ jobs:
           name: Install ansible
           command: yum install -y ansible
       - attach_workspace:
-          at: /workspace
+          at: ~/
+      - run: ls -la
+      - run: pwd
       - run:
           name: Configure server
           command: |
