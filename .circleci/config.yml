@@ -158,7 +158,9 @@ jobs:
           command: yum install -y tar gzip
       - run:
           name: Install ansible
-          command: yum install -y ansible
+          command: |
+            yum update -y
+            yum install -y ansible
       - attach_workspace:
           at: ~/
       - run: cat .circleci/ansible/inventory.txt
