@@ -9,11 +9,15 @@ commands:
         default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
-          name: Destroy environments
+          name: Destroy backend
           when: on_fail
           command: |
             aws cloudformation delete-stack \
-              --stack-name=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
+              --stack-name=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}}
+      - run:
+          name: Destroy frontend
+          when: on_fail
+          command: |
             aws cloudformation delete-stack \
               --stack-name=udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
             
@@ -37,7 +41,7 @@ jobs:
 
   build-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: tr3mo89/udacity-project4:latest
     steps:
       - checkout
       - restore_cache:
@@ -54,7 +58,7 @@ jobs:
 
   test-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: tr3mo89/udacity-project4:latest
     steps:
       - checkout
       - restore_cache:
@@ -68,7 +72,7 @@ jobs:
                 
   test-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: tr3mo89/udacity-project4:latest
     steps:
       - checkout
       - restore_cache:
@@ -82,7 +86,7 @@ jobs:
             
   analyze-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: tr3mo89/udacity-project4:latest
     steps:
       - checkout
       - restore_cache:
@@ -95,7 +99,7 @@ jobs:
 
   analyze-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: tr3mo89/udacity-project4:latest
     steps:
       - checkout
       - restore_cache:
@@ -110,7 +114,7 @@ jobs:
 
   deploy-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: tr3mo89/udacity-project4:latest
     steps:
       - checkout
       - run: 
@@ -148,9 +152,7 @@ jobs:
   
   configure-infrastructure:
     docker:
-      #- image: amazon/aws-cli
-      #- image: tr3mo89/fedora-aws-ansible:latest
-      - image: tr3mo89/ubuntu-aws-ansible:latest
+      - image: tr3mo89/udacity-project4:latest
     steps:
       - checkout
       - add_ssh_keys:
@@ -174,7 +176,7 @@ jobs:
 
   run-migrations:
     docker:
-      - image: circleci/node:13.8.0
+      - image: tr3mo89/udacity-project4:latest
     steps:
       - checkout
       - restore_cache:
