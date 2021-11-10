@@ -248,6 +248,7 @@ jobs:
             cat inventory.txt
             pwd
             ls -la
+            echo "Start deployment job by ansible"
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment  
 

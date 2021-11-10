@@ -1,10 +1,12 @@
 - name: "extract file"
   unarchive:
     src: ~/project/artifact.tar.gz
-    dest: ~/project/backend
+    dest: /root/project/backend
 - name: "start app"
   command: |
+    pwd
     cd backend
+    pwd
     npm install
     pm2 stop default
     pm2 start npm -- start
