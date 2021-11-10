@@ -1,10 +1,18 @@
+# Create a directory to extract the file to
+- name: "create directory"
+  file:
+    path: ~/project/backend
+    state: directory
+
 - name: "extract file"
   unarchive:
     src: ~/project/artifact.tar.gz
-    dest: /root/project/backend
+    dest: ~/project/backend
+
 - name: "start app"
   command: |
     pwd
+    ls -la
     cd backend
     pwd
     npm install
