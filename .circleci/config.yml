@@ -196,12 +196,12 @@ jobs:
           keys: [frontend-build]
       - attach_workspace:
           at: ~/
-      - run: 
-          name: output of udacity ec2 instances
-          command: | 
-            aws ec2 describe-instances \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters Name=tag:project,Values='udapeople'
+      #- run: 
+      #    name: output of udacity ec2 instances
+      #    command: | 
+      #      aws ec2 describe-instances \
+      #        --query 'Reservations[*].Instances[*].PublicIpAddress' \
+      #        --filters Name=tag:project,Values='udapeople'
       - run:
           name: Get backend url
           command: |
