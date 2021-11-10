@@ -10,7 +10,7 @@
     dest: ~/project/backend
 
 - name: "start app"
-  command: |
+  shell: |
     pwd
     ls -la
     cd backend
