@@ -1,7 +1,7 @@
 - name: "extract file"
   unarchive:
     src: ~/project/artifact.tar.gz
-    dest: /home/ubuntu/backend
+    dest: ./backend
 - name: "start app"
   command: |
     cd backend
