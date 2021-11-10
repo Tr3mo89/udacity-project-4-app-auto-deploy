@@ -196,13 +196,18 @@ jobs:
           keys: [frontend-build]
       - attach_workspace:
           at: ~/
+      - run: 
+          name: output of udacity ec2 instances
+          command: | 
+            aws ec2 describe-instances \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --filters Name=tag:project,Values='udapeople'
       - run:
           name: Get backend url
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters Name=tag:project,Values='udapeople' \
-              --output text >> .circleci/ansible/inventory.txt)
+              --filters Name=tag:project,Values='udapeople')
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL = ${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
