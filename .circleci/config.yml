@@ -24,7 +24,7 @@ commands:
 jobs:
   build-frontend:
     docker:
-      - image: tr3mo89/udacity-project4:latest
+      - image: tr3mo89/udacity-project4:1.0.0
     steps:
       - checkout
       - restore_cache:
@@ -41,7 +41,7 @@ jobs:
 
   build-backend:
     docker:
-      - image: tr3mo89/udacity-project4:latest
+      - image: tr3mo89/udacity-project4:1.0.0
     steps:
       - checkout
       - restore_cache:
@@ -58,7 +58,7 @@ jobs:
 
   test-frontend:
     docker:
-      - image: tr3mo89/udacity-project4:latest
+      - image: tr3mo89/udacity-project4:1.0.0
     steps:
       - checkout
       - restore_cache:
@@ -72,7 +72,7 @@ jobs:
                 
   test-backend:
     docker:
-      - image: tr3mo89/udacity-project4:latest
+      - image: tr3mo89/udacity-project4:1.0.0
     steps:
       - checkout
       - restore_cache:
@@ -86,7 +86,7 @@ jobs:
             
   analyze-frontend:
     docker:
-      - image: tr3mo89/udacity-project4:latest
+      - image: tr3mo89/udacity-project4:1.0.0
     steps:
       - checkout
       - restore_cache:
@@ -99,7 +99,7 @@ jobs:
 
   analyze-backend:
     docker:
-      - image: tr3mo89/udacity-project4:latest
+      - image: tr3mo89/udacity-project4:1.0.0
     steps:
       - checkout
       - restore_cache:
@@ -114,7 +114,7 @@ jobs:
 
   deploy-infrastructure:
     docker:
-      - image: tr3mo89/udacity-project4:latest
+      - image: tr3mo89/udacity-project4:1.0.0
     steps:
       - checkout
       - run:
@@ -149,7 +149,7 @@ jobs:
   
   configure-infrastructure:
     docker:
-      - image: tr3mo89/udacity-project4:latest
+      - image: tr3mo89/udacity-project4:1.0.0
     steps:
       - checkout
       - add_ssh_keys:
@@ -166,7 +166,7 @@ jobs:
 
   run-migrations:
     docker:
-      - image: tr3mo89/udacity-project4:latest
+      - image: tr3mo89/udacity-project4:1.0.0
     steps:
       - checkout
       - restore_cache:
@@ -189,7 +189,7 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: tr3mo89/udacity-project4:latest
+      - image: tr3mo89/udacity-project4:1.0.0
     steps:
       - checkout
       - restore_cache:
@@ -225,7 +225,7 @@ jobs:
 
   deploy-backend:
     docker:
-      - image: tr3mo89/udacity-project4:latest
+      - image: tr3mo89/udacity-project4:1.0.0
     steps:
       - checkout
       - add_ssh_keys:
@@ -255,7 +255,7 @@ jobs:
   smoke-test:
     docker:
     #  - image: python:3.7-alpine3.11
-      - image: tr3mo89/udacity-project4:latest
+      - image: tr3mo89/udacity-project4:1.0.0
     steps:
       - checkout
       #- run:
@@ -270,24 +270,22 @@ jobs:
               --filters Name=tag:project,Values='udapeople' \
               --output text)
             echo $BACKEND_IP
-      - run:
-          name: Backend smoke test.
-          command: |
-            export BACKEND_IP=$(aws ec2 describe-instances \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters Name=tag:project,Values='udapeople' \
-              --output text)
-            echo $BACKEND_IP
-            export API_URL="http://${BACKEND_IP}:3030"
-            echo "API_URL = ${API_URL}"
-            if curl "${API_URL}/api/status" | grep "ok"
-            then
-              echo "200 - Curl to ${API_URL}/api/status was successful"
-              return 0 
-            else
-              echo "500 - Curl to ${API_URL}/api/status failed"
-              return 1
-            fi
+      #- run:
+      #    name: Backend smoke test.
+      #    command: |
+      #      export BACKEND_IP=$(aws ec2 describe-instances \
+      #        --query 'Reservations[*].Instances[*].PublicIpAddress' \
+      #        --filters Name=tag:project,Values='udapeople' \
+      #        --output text)
+      #      echo $BACKEND_IP
+      #      export API_URL="http://${BACKEND_IP}:3030"
+      #      echo "API_URL = ${API_URL}"
+      #      if curl "${API_URL}/api/status" | grep "ok"
+      #      then
+      #        return 0 
+      #     else
+      #        return 1
+      #      fi
       - run:
           name: Frontend smoke test.
           command: |
