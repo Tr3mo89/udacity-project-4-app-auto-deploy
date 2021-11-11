@@ -1,1 +1,12 @@
 node_modules/
+Dockerfile-alpine
+Dockerfile-fedora
+backend/dist/
+backend/migrations_dump.txt
+docker-build.sh
+env-variables.sh
+package-lock.json
+working-configure-server-example.yml
+errors/
+backend/package-lock.json
+.circleci/test-config copy.yml

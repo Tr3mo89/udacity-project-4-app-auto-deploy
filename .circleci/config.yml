@@ -64,7 +64,7 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       - run:
-          name: front-end build
+          name: test frontend
           command: |
              cd frontend
             # npm install  !!!!!!!!!!!!!!!!!!!! just for faster deployments
@@ -78,7 +78,7 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - run:
-          name: Back-end build
+          name: test backend
           command: |
              cd backend
             # npm install  !!!!!!!!!!!!!!!!!!!! just for faster deployments
@@ -186,6 +186,7 @@ jobs:
               curl -H "Content-Type: text/plain" -H "token: 9193554c-fc6e-4701-be40-85335fa888fb" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
             fi
       - destroy-environment   
+      # - revert_migrations
 
   deploy-frontend:
     docker:
@@ -196,12 +197,6 @@ jobs:
           keys: [frontend-build]
       - attach_workspace:
           at: ~/
-      #- run: 
-      #    name: output of udacity ec2 instances
-      #    command: | 
-      #      aws ec2 describe-instances \
-      #        --query 'Reservations[*].Instances[*].PublicIpAddress' \
-      #        --filters Name=tag:project,Values='udapeople'
       - run:
           name: Get backend url
           command: |
