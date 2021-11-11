@@ -252,6 +252,50 @@ jobs:
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment  
 
+  smoke-test:
+    docker:
+    #  - image: python:3.7-alpine3.11
+      - image: tr3mo89/udacity-project4:latest
+    steps:
+      - checkout
+      #- run:
+      #    name: Install dependencies
+      #    command: |
+      #      # your code here
+      - run:
+          name: Get backend url
+          command: |
+            export BACKEND_IP=$(aws ec2 describe-instances \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --filters Name=tag:project,Values='udapeople' \
+              --output text)
+            
+      - run:
+          name: Backend smoke test.
+          command: |
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL = ${API_URL}"
+            if curl "${API_URL}/api/status" | grep "ok"
+            then
+              echo "200 - Curl to ${API_URL}/api/status was successful"
+              return 0 
+            else
+              echo "500 - Curl to ${API_URL}/api/status failed"
+              return 1
+            fi
+      - run:
+          name: Frontend smoke test.
+          command: |
+            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-eu-central-1.amazonaws.com/#/employees"
+            echo ${URL}
+            if curl -s ${URL} | grep "Welcome"
+            then
+              return 1
+            else
+              return 1
+            fi
+      - destroy-environment
+
 workflows:
   default:
     jobs:
@@ -275,3 +319,5 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-frontend, deploy-backend]
