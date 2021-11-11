@@ -254,14 +254,24 @@ jobs:
 
   smoke-test:
     docker:
-    #  - image: python:3.7-alpine3.11
-      - image: tr3mo89/udacity-project4:1.0.0
+      - image: python:3.7-alpine3.11
+    #  - image: tr3mo89/udacity-project4:1.0.0
     steps:
       - checkout
-      #- run:
-      #    name: Install dependencies
-      #    command: |
-      #      # your code here
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --no-cache \
+              python3 \
+              py3-pip \
+              curl \
+              nodejs \
+              npm \
+            && pip3 install --upgrade pip \
+            && pip3 install \
+                awscli \
+            && rm -rf /var/cache/apk/*
+            apk add --update ansible
       - run:
           name: Get backend url
           command: |
