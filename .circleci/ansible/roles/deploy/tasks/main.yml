@@ -3,15 +3,10 @@
     path: /home/ubuntu/backend
     state: directory
 
-- name: "show path"
-  become: true
-  shell: pwd
-
 - name: "unarchive backend files"
   unarchive:
     src: ~/project/artifact.tar.gz
     dest: /home/ubuntu/backend
-
 
 # worked, but took a lot of time
 #- name: "upgrade packages."
