@@ -23,20 +23,21 @@ commands:
   install-dependencies:
     description: python-alpine image => install dependencies for the jobs
     steps:
-      - name: Install dependencies
-      - command: |
-            apk add --no-cache \
-              python3 \
-              py3-pip \
-              curl \
-              nodejs \
-              npm \
-            && pip3 install --upgrade pip \
-            && pip3 install \
-                awscli \
-            && rm -rf /var/cache/apk/*
-            apk add --update ansible
-            npm install pm2 -g
+      - run:
+          name: Install dependencies
+          command: |
+              apk add --no-cache \
+                python3 \
+                py3-pip \
+                curl \
+                nodejs \
+                npm \
+              && pip3 install --upgrade pip \
+              && pip3 install \
+                  awscli \
+              && rm -rf /var/cache/apk/*
+              apk add --update ansible
+              npm install pm2 -g
             
 jobs:
   build-frontend:
