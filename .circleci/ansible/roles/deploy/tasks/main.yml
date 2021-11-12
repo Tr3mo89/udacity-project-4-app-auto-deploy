@@ -1,9 +1,12 @@
-# Create a directory to extract the file to
-- name: "create directory"
-  file:
-    path: ~/project/backend
-    state: directory
-
+- name: "upgrade packages."
+  become: true
+  apt:
+    upgrade: "yes"
+- name: "install dependencies."
+  become: true
+  apt:
+    name: ["nodejs", "npm"]
+    update_cache: yes
 - name: "install pm2"
   become: true
   npm:
@@ -11,44 +14,24 @@
     global: yes
     production: yes
     state: present
-
-#- name: "copy backend file"
-#  become: true
-#  copy:
-#    src: /root/project/backend
-#    dest: /root
-#    force: no
-
-- name: "extract file"
-  unarchive:
-    src: ~/project/artifact.tar.gz
-    dest: ~/project/backend
-
+- name: "copy backend file"
+  become: true
+  copy:
+    src: /root/project/backend
+    dest: /root
+    force: no
 - name: "install npm packages"
   become: true
   command: npm install
   args:
-    chdir: ~/project/backend
-
+    chdir: /root/backend
 - name: "compile npm packages"
   become: true
   command: npm run build
   args:
-    chdir: ~/project/backend
-
+    chdir: /root/backend
 - name: "start server"
   become: true
   command: pm2 start npm -- run start
   args:
-    chdir: ~/project/backend/dist
-
-#- name: "start app"
-#  shell: |
-#    pwd
-#    ls -la
-#    cd backend
-#    pwd
-#    npm install
-#    npm run build
-#    pm2 stop default
-#    pm2 start npm -- start
+    chdir: /root/backend/dist

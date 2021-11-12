@@ -220,13 +220,28 @@ jobs:
 
   deploy-backend:
     docker:
-      - image: tr3mo89/udacity-project4:1.0.0
+       - image: python:3.7-alpine3.11
+     # - image: tr3mo89/udacity-project4:1.0.0
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints: ["58:08:c1:dc:0c:42:47:47:88:cc:d8:90:a3:95:14:94"]
       - attach_workspace:
           at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --no-cache \
+              python3 \
+              py3-pip \
+              curl \
+              nodejs \
+              npm \
+            && pip3 install --upgrade pip \
+            && pip3 install \
+                awscli \
+            && rm -rf /var/cache/apk/*
+            apk add --update ansible
       - run: ls -la
       - run: cat .circleci/ansible/inventory.txt
       # dependencies are already installed on the docker image
