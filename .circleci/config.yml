@@ -246,18 +246,29 @@ jobs:
       - run: cat .circleci/ansible/inventory.txt
       # dependencies are already installed on the docker image
       - run:
-          name: Deploy backend
-          command: |
+          name: run npm
+          command: | 
+            pwd
             cd backend
+            pwd
             npm install
             npm run build
             cd ..
-            tar -C backend -czvf artifact.tar.gz .
-            cd .circleci/ansible
-            echo "Contents  of the inventory.txt file is -------"
-            cat inventory.txt
+            pwd
+      - run:
+          name: extract artifact
+          command: |
             pwd
             ls -la
+            tar -C backend -czvf artifact.tar.gz .
+      - run:
+          name: Deploy backend
+          command: |
+            pwd
+            cd .circleci/ansible
+            pwd
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
             echo "Start deployment job by ansible"
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment  

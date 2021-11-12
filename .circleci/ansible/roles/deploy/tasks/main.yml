@@ -1,12 +1,14 @@
-- name: "upgrade packages."
-  become: true
-  apt:
-    upgrade: "yes"
-- name: "install dependencies."
-  become: true
-  apt:
-    name: ["nodejs", "npm"]
-    update_cache: yes
+#- name: "upgrade packages."
+#  become: true
+#  apt:
+#    upgrade: "yes"
+
+#- name: "install dependencies."
+#  become: true
+#  apt:
+#    name: ["nodejs", "npm"]
+#    update_cache: yes
+
 - name: "install pm2"
   become: true
   npm:
@@ -14,22 +16,37 @@
     global: yes
     production: yes
     state: present
+
+- name: "show files"
+  become: true
+  shell: | 
+    ls -la /root/project/backend
+
 - name: "copy backend file"
   become: true
   copy:
     src: /root/project/backend
     dest: /root
     force: no
-- name: "install npm packages"
+
+- name: "show files"
+  become: true
+  shell: | 
+    ls -la /root/backend
+    ls -la /root
+    
+- name: "install node_modules"
   become: true
   command: npm install
   args:
     chdir: /root/backend
-- name: "compile npm packages"
+
+- name: "build npm packages"
   become: true
   command: npm run build
   args:
     chdir: /root/backend
+
 - name: "start server"
   become: true
   command: pm2 start npm -- run start
