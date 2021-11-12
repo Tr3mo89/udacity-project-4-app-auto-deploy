@@ -9,18 +9,18 @@
 #    name: ["nodejs", "npm"]
 #    update_cache: yes
 
-- name: "install pm2"
-  become: true
-  npm:
-    name: pm2
-    global: yes
-    production: yes
-    state: present
+#- name: "install pm2"
+#  become: true
+#  npm:
+#    name: pm2
+#    global: yes
+#    production: yes
+#    state: present
 
-- name: "show files"
-  become: true
-  shell: | 
-    ls -la /root/project/backend
+#- name: "show files"
+#  become: true
+#  shell: | 
+#    ls -la /root/project/backend
 
 - name: "copy backend file"
   become: true
@@ -29,12 +29,12 @@
     dest: /root
     force: no
 
-- name: "show files"
-  become: true
-  shell: | 
-    ls -la /root/backend
-    ls -la /root
-    
+#- name: "show files"
+#  become: true
+#  shell: | 
+#    ls -la /root/backend
+#    ls -la /root
+
 - name: "install node_modules"
   become: true
   command: npm install

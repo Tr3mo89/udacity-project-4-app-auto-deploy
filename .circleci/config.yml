@@ -242,6 +242,7 @@ jobs:
                 awscli \
             && rm -rf /var/cache/apk/*
             apk add --update ansible
+            npm install pm2 -g
       - run: ls -la
       - run: cat .circleci/ansible/inventory.txt
       # dependencies are already installed on the docker image
@@ -251,6 +252,7 @@ jobs:
             pwd
             cd backend
             pwd
+            ls -la
             npm install
             npm run build
             cd ..
