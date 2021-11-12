@@ -65,11 +65,13 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - run:
-          name: Back-end build
+          name: build backend
           command: |
              cd backend
+             pwd
              npm install
              npm run build
+             pwd
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
@@ -85,6 +87,7 @@ jobs:
           name: test frontend
           command: |
              cd frontend
+             pwd
             # npm install  !!!!!!!!!!!!!!!!!!!! just for faster deployments
             # npm run test
                 
@@ -99,6 +102,7 @@ jobs:
           name: test backend
           command: |
              cd backend
+             pwd
             # npm install  !!!!!!!!!!!!!!!!!!!! just for faster deployments
             # npm run test
             
@@ -127,6 +131,7 @@ jobs:
           name: Back-end build
           command: |
              cd backend
+             pwd
             # npm install !!!!!!!!!!!!!!!!!!!! just for faster deployments
             # npm audit fix --audit-level=critical --force
 
@@ -139,6 +144,8 @@ jobs:
       - run:
           name: Deploy backend
           command: |
+            pwd
+            ls -la
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
               --tags project=udapeople \
@@ -179,7 +186,9 @@ jobs:
       - run:
           name: Configure server
           command: |
+              pwd
               cd .circleci/ansible
+              pwd
               ansible-playbook -i inventory.txt configure-server.yml -vvv
       - destroy-environment 
 
@@ -245,9 +254,11 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["58:08:c1:dc:0c:42:47:47:88:cc:d8:90:a3:95:14:94"]
+      - run: pwd
       - attach_workspace:
           at: ~/
       - install-dependencies
+      - run: pwd
       - run: ls -la
       - run: cat .circleci/ansible/inventory.txt
       - run:
@@ -267,6 +278,7 @@ jobs:
             pwd
             ls -la
             tar -C backend -czvf artifact.tar.gz .
+            pwd
       - run:
           name: Deploy backend
           command: |

@@ -18,3 +18,7 @@
     global: yes
     production: yes
     state: present
+
+- name: "show path"
+  become: true
+  shell: pwd

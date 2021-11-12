@@ -1,18 +1,32 @@
 - name: "create directory"
   file:
-    path: ~/project/backend
+    path: /home/ubuntu/backend
     state: directory
+
+- name: "show path"
+  become: true
+  shell: pwd
+
+- name: "unarchive backend files"
+  unarchive:
+    src: ~/project/artifact.tar.gz
+    dest: /home/ubuntu/backend
+
+
+# worked, but took a lot of time
 #- name: "upgrade packages."
 #  become: true
 #  apt:
-#    upgrade: "yes"
+#    upgrade: "yes"7
 
+# is working fine
 #- name: "install dependencies."
 #  become: true
 #  apt:
 #    name: ["nodejs", "npm"]
 #    update_cache: yes
 
+# is working fine
 #- name: "install pm2"
 #  become: true
 #  npm:
@@ -21,11 +35,13 @@
 #    production: yes
 #    state: present
 
+# fails
 #- name: "show files"
 #  become: true
 #  shell: | 
 #    ls -la /root/project/backend
 
+# always time out
 #- name: "copy backend file"
 #  become: true
 #  copy:
