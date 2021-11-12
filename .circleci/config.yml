@@ -277,7 +277,7 @@ jobs:
             cat inventory.txt
             echo "Start deployment job by ansible"
             ansible-playbook -i inventory.txt deploy-backend.yml
-      - destroy-environment  
+     # - destroy-environment  
 
   smoke-test:
     docker:

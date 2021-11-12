@@ -1,3 +1,7 @@
+- name: "create directory"
+  file:
+    path: ~/project/backend
+    state: directory
 #- name: "upgrade packages."
 #  become: true
 #  apt:
@@ -39,16 +43,16 @@
   become: true
   command: npm install
   args:
-    chdir: /root/backend
+    chdir: ~/project/backend
 
 - name: "build npm packages"
   become: true
   command: npm run build
   args:
-    chdir: /root/backend
+    chdir: ~/project/backend
 
 - name: "start server"
   become: true
   command: pm2 start npm -- run start
   args:
-    chdir: /root/backend/dist
+    chdir: ~/project/backend
