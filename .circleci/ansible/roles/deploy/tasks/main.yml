@@ -59,16 +59,16 @@
   become: true
   command: npm install
   args:
-    chdir: ~/project/backend
+    chdir: /home/ubuntu/backend
 
 - name: "build npm packages"
   become: true
   command: npm run build
   args:
-    chdir: ~/project/backend
+    chdir: /home/ubuntu/backend
 
 - name: "start server"
   become: true
   command: pm2 start npm -- run start
   args:
-    chdir: ~/project/backend
+    chdir: /home/ubuntu/backend
