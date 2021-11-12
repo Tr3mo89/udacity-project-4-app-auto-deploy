@@ -20,6 +20,23 @@ commands:
           command: |
             aws cloudformation delete-stack \
               --stack-name=udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
+  install-dependencies:
+    description: python-alpine image => install dependencies for the jobs
+    steps:
+      - name: Install dependencies
+      - command: |
+            apk add --no-cache \
+              python3 \
+              py3-pip \
+              curl \
+              nodejs \
+              npm \
+            && pip3 install --upgrade pip \
+            && pip3 install \
+                awscli \
+            && rm -rf /var/cache/apk/*
+            apk add --update ansible
+            npm install pm2 -g
             
 jobs:
   build-frontend:
@@ -95,7 +112,8 @@ jobs:
           name: front-end build
           command: |
              cd frontend
-             npm audit fix --audit-level=critical --force
+            # !!!!!!!!!!!!!!!!!!!! just for faster deployments
+            # npm audit fix --audit-level=critical --force
 
   analyze-backend:
     docker:
@@ -108,8 +126,8 @@ jobs:
           name: Back-end build
           command: |
              cd backend
-             npm install
-             npm audit fix --audit-level=critical --force
+            # npm install !!!!!!!!!!!!!!!!!!!! just for faster deployments
+            # npm audit fix --audit-level=critical --force
 
 
   deploy-infrastructure:
@@ -228,24 +246,9 @@ jobs:
           fingerprints: ["58:08:c1:dc:0c:42:47:47:88:cc:d8:90:a3:95:14:94"]
       - attach_workspace:
           at: ~/
-      - run:
-          name: Install dependencies
-          command: |
-            apk add --no-cache \
-              python3 \
-              py3-pip \
-              curl \
-              nodejs \
-              npm \
-            && pip3 install --upgrade pip \
-            && pip3 install \
-                awscli \
-            && rm -rf /var/cache/apk/*
-            apk add --update ansible
-            npm install pm2 -g
+      - install-dependencies
       - run: ls -la
       - run: cat .circleci/ansible/inventory.txt
-      # dependencies are already installed on the docker image
       - run:
           name: run npm
           command: | 
@@ -281,20 +284,7 @@ jobs:
     #  - image: tr3mo89/udacity-project4:1.0.0
     steps:
       - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            apk add --no-cache \
-              python3 \
-              py3-pip \
-              curl \
-              nodejs \
-              npm \
-            && pip3 install --upgrade pip \
-            && pip3 install \
-                awscli \
-            && rm -rf /var/cache/apk/*
-            apk add --update ansible
+      - install-dependencies
       - run:
           name: Get backend url
           command: |

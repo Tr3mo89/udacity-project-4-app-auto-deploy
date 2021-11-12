@@ -22,12 +22,12 @@
 #  shell: | 
 #    ls -la /root/project/backend
 
-- name: "copy backend file"
-  become: true
-  copy:
-    src: /root/project/backend
-    dest: /root
-    force: no
+#- name: "copy backend file"
+#  become: true
+#  copy:
+#    src: /root/project/backend
+#    dest: /root
+#    force: no
 
 #- name: "show files"
 #  become: true
