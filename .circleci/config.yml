@@ -379,25 +379,24 @@ jobs:
       - revert-migrations:
           workflow_id: ${CIRCLE_WORKFLOW_ID}
 
-#cleanup:
-#    docker:
-#      - image: python:3.7-alpine3.11
-#    steps:
-#      - checkout
-#      - install-dependencies
-#      - run:
-#          name: Get old stack workflow id
-#          command: |
-            # your code here
- #           export OldWorkflowID="the id here"
- #           export STACKS=[] #put the list of stacks here
- #     - run:
- #         name: Remove old stacks and files
- #         command: |
- #           if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
- #           then
- #             # your code here
- #           fi
+  #cleanup:
+  #    docker:
+  #      - image: python:3.7-alpine3.11
+  #    steps:
+  #      - checkout
+  #      - install-dependencies
+  #      - run:
+  #          name: Get old stack workflow id
+  #          command: |
+  #           export OldWorkflowID=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text)
+  #           export STACKS=[] #put the list of stacks here
+  #     - run:
+  #         name: Remove old stacks and files
+  #         command: |
+  #           if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+  #           then
+  #             # your code here
+  #           fi
 
 workflows:
   default:
@@ -427,3 +426,7 @@ workflows:
           requires: [run-migrations]
       - smoke-test:
           requires: [deploy-frontend, deploy-backend]
+      - cloudfront-update:
+          requires: [smoke-test]
+#      - cleanup:
+#          requires: [cloudfront-update]
