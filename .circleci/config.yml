@@ -396,12 +396,14 @@ jobs:
              export $OldWorkflowID
              echo OldWorkflowID: "${OldWorkflowID}"
              echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
-             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
+             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" && -z "${OldWorkflowID}"]]
              then
                echo "Start to cleanup old resources"
                aws s3 rb "s3://udapeople-${OldWorkflowID}" --force
                aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
                aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+             else
+               echo OldWorkflowID: "${OldWorkflowID}"
              fi
 
 workflows:
@@ -434,5 +436,5 @@ workflows:
           requires: [deploy-frontend, deploy-backend]
       - cloudfront-update:
           requires: [smoke-test]
-      - cleanup:
-          requires: [cloudfront-update]
+      - cleanup #:
+          #requires: [cloudfront-update]
