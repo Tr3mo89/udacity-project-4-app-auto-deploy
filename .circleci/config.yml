@@ -396,7 +396,7 @@ jobs:
              export $OldWorkflowID
              echo OldWorkflowID: "${OldWorkflowID}"
              echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
-             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" && -z "${OldWorkflowID}"]]
+             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}"]] && [-z "${OldWorkflowID}"]
              then
                echo "Start to cleanup old resources"
                aws s3 rb "s3://udapeople-${OldWorkflowID}" --force
