@@ -112,8 +112,8 @@ jobs:
           command: |
              cd frontend
              pwd
-            # npm install  !!!!!!!!!!!!!!!!!!!! just for faster deployments
-            # npm run test
+             npm install
+             npm run test
                 
   test-backend:
     docker:
@@ -127,8 +127,8 @@ jobs:
           command: |
              cd backend
              pwd
-            # npm install  !!!!!!!!!!!!!!!!!!!! just for faster deployments
-            # npm run test
+             npm install
+             npm run test
             
   analyze-frontend:
     docker:
@@ -141,8 +141,7 @@ jobs:
           name: front-end build
           command: |
              cd frontend
-            # !!!!!!!!!!!!!!!!!!!! just for faster deployments
-            # npm audit fix --audit-level=critical --force
+             npm audit fix --audit-level=critical --force
 
   analyze-backend:
     docker:
@@ -156,8 +155,8 @@ jobs:
           command: |
              cd backend
              pwd
-            # npm install !!!!!!!!!!!!!!!!!!!! just for faster deployments
-            # npm audit fix --audit-level=critical --force
+             npm install
+             npm audit fix --audit-level=critical --force
 
 
   deploy-infrastructure:
@@ -238,7 +237,7 @@ jobs:
               curl -H "Content-Type: text/plain" -H "token: 9193554c-fc6e-4701-be40-85335fa888fb" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
             fi
       - destroy-environment   
-      # - revert_migrations
+
 
   deploy-frontend:
     docker:
@@ -313,7 +312,7 @@ jobs:
             cat inventory.txt
             echo "Start deployment job by ansible"
             ansible-playbook -i inventory.txt deploy-backend.yml
-     # - destroy-environment  
+      - destroy-environment  
 
   smoke-test:
     docker:
