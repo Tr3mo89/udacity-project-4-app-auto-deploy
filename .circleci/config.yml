@@ -383,20 +383,18 @@ jobs:
 
   cleanup:
       docker:
-        - image: tr3mo89/udacity-project4:1.0.0
+        - image: python:3.7-alpine3.11
       steps:
         - checkout
-       # - install-dependencies
+        - install-dependencies
         - run:
             name: Get old workflow id
             command: |
               export OldWorkflowIDExport=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text)
               echo OldWorkflowIDExport: "${OldWorkflowIDExport}"
-              IN=${OldWorkflowIDExport}
-              IFS='-' read -ra ADDR <<< "$IN"
-              for i in "${ADDR[@]}"; do
-                OldWorkflowID=$i
-              done
+              foo=$OldWorkflowIDExport
+              echo ${foo##*-}
+              OldWorkflowID=${foo##*-}
               export $OldWorkflowID
               echo OldWorkflowID: "${OldWorkflowID}"
               echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
@@ -414,7 +412,7 @@ jobs:
              if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
              then
                echo "Start to cleanup old resources"
-               echo "s3://${OldWorkflowID}"
+               echo "s3://udapeople-${OldWorkflowID}"
                aws s3 rb "s3://udapeople-${OldWorkflowID}" --force
                aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
                aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
