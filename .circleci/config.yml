@@ -396,7 +396,10 @@ jobs:
         - run:
             name: Get old stacks
             command: |
-              export STACKS=$(aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter CREATE_COMPLETE --no-paginate --output text)
+              export STACKS=$(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
+                --stack-status-filter CREATE_COMPLETE \
+                --filters Name=tag:project,Values='udapeople' \
+                --no-paginate --output text)
               echo "Stacks:"
               echo $STACKS
         - run:
@@ -405,7 +408,7 @@ jobs:
              if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
              then
                echo "Start to cleanup old resources"
-               aws s3 rb "s3://udapeople-${OldWorkflowID}" --force
+               aws s3 rb "s3://${OldWorkflowID}" --force
                aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
                aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
              fi
