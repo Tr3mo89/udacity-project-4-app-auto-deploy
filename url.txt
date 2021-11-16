@@ -2,4 +2,4 @@
 https://github.com/Tr3mo89/udacity-project-4-app-auto-deploy
 
 [URL2]
-http://udapeople-f4ff85c.s3-website.eu-central-1.amazonaws.com/#/employees
+http://udapeople-1d097ea.s3-website.eu-central-1.amazonaws.com/#/employees
